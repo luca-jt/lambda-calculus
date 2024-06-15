@@ -59,20 +59,28 @@ MAX = lambda a: lambda b: GTE(a)(b)(a)(b)
 
 NUMBER = lambda n: to_numeral(n)
 ONE = NUMBER(1)
+TWO = NUMBER(2)
+TREE = NUMBER(3)
+FOUR = NUMBER(4)
+FIVE = NUMBER(5)
+SIX = NUMBER(6)
+SEVEN = NUMBER(7)
+EIGHT = NUMBER(8)
+NINE = NUMBER(9)
+TEN = NUMBER(10)
 PLUS = lambda m: lambda n: m(SUCC)(n)
 MINUS = lambda m: lambda n: n(PRED)(m)
 MULT = lambda m: lambda n: lambda f: m(n(f))
 DIV = Y(lambda f: lambda a: lambda b: LT(a)(b)(lambda _: ZERO)(lambda _: SUCC(f(MINUS(a)(b))(b)))(ZERO))
 MOD = Y(lambda f: lambda a: lambda b: LT(a)(b)(lambda _: a)(lambda _: f(MINUS(a)(b))(b))(ZERO))
-IS_EVEN = lambda n: IS_ZERO(MOD(n)(NUMBER(2)))
+IS_EVEN = lambda n: IS_ZERO(MOD(n)(TWO))
 IS_ODD = lambda n: NOT(IS_EVEN(n))
 EXP = lambda m: lambda n: n(m)
 FACTORIAL = FAC = Y(lambda f: lambda n: IS_ZERO(n)(lambda _: ONE)(lambda _: MULT(n)(f(PRED(n))))(ZERO))
-FIB = Y(lambda f: lambda n: LTE(n)(NUMBER(2))(lambda _: ONE)(lambda _: PLUS(f(PRED(n)))(f(PRED(PRED(n)))))(ZERO))
+FIB = Y(lambda f: lambda n: LTE(n)(TWO)(lambda _: ONE)(lambda _: PLUS(f(PRED(n)))(f(PRED(PRED(n)))))(ZERO))
 IS_EQUAL = lambda m: lambda n: AND(GTE(m)(n))(LTE(m)(n))
 
 
+# type conversions
 BOOL_TO_INT = lambda x: IF_THEN_ELSE(EQUIV(x)(TRUE))(ONE)(ZERO)
 INT_TO_BOOL = lambda x: IF_THEN_ELSE(IS_ZERO(x))(FALSE)(TRUE)
-
-#FOR_EACH =
