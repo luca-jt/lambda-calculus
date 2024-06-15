@@ -31,10 +31,13 @@ REDUCE = Y(lambda f: lambda r: lambda l: lambda v: IS_EMPTY(l)(lambda _: v)(lamb
 FILTER = lambda f: lambda l: (REDUCE(lambda x: lambda xs: f(x)(APPEND(xs)(x))(xs))(l)(LIST))
 LENGTH = lambda l: REDUCE(lambda x: lambda n: SUCC(n))(l)(ZERO)
 INDEX = Y(lambda f: lambda n: lambda l: (IS_ZERO(n)(lambda _: HEAD(l))(lambda _: f(PRED(n))(TAIL(l)))(TRUE)))
-
+MERGE = lambda a: lambda b: IF_THEN_ELIF_THEN_ELSE(IS_ZERO(LENGTH(a)))(b)(IS_ZERO(LENGTH(b)))(a)(IF_THEN_ELSE(LT(HEAD(a))(HEAD(b)))(INSERT_FRONT(MERGE(TAIL(a))(b))(HEAD(a)))(INSERT_FRONT(MERGE(a)(TAIL(b)))(HEAD(b))))
+DROP = lambda n: lambda l: n(TAIL)(l)
+TAKE = Y(lambda f: lambda n: lambda l: (OR(IS_EMPTY(l))(IS_ZERO(n))(lambda _: LIST)(lambda _: (INSERT_FRONT(f(PRED(n))(TAIL(l)))(HEAD(l))))(TRUE)))
 
 # boolean algebra
 IF_THEN_ELSE = lambda b: lambda x: lambda y: b(x)(y)
+IF_THEN_ELIF_THEN_ELSE = lambda b: lambda x: lambda p: lambda y: lambda z: IF_THEN_ELSE(b)(x)(IF_THEN_ELSE(p)(y)(z))
 NOT = lambda b: IF_THEN_ELSE(b)(FALSE)(TRUE)
 AND = lambda p: lambda q: p(q)(FALSE)
 NAND = lambda p: lambda q: AND(NOT(p))(NOT(q))
