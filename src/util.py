@@ -1,4 +1,4 @@
-from lang import IS_EMPTY, TAIL, TRUE, HEAD, to_numeral, LIST, APPEND
+from lang import IS_EMPTY, TAIL, TRUE, HEAD
 
 
 def decode_numeral(numeral) -> int:
@@ -7,17 +7,14 @@ def decode_numeral(numeral) -> int:
 def print_numeral(numeral):
     print(decode_numeral(numeral))
 
-def numeral_list(py_list: list[int]):
-    lst = LIST
-    for num in py_list:
-        lst = APPEND(to_numeral(num))(lst)
-    return lst
-
-def print_numeral_list(c_list):
+def decode_numeral_list(c_list):
     py_list = []
     while True:
         if IS_EMPTY(c_list) is TRUE:
             break
         py_list.append(decode_numeral(HEAD(c_list)))
         c_list = TAIL(c_list)
-    print(py_list)
+    return py_list
+
+def print_numeral_list(c_list):
+    print(decode_numeral_list(c_list))

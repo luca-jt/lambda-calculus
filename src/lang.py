@@ -6,11 +6,17 @@ ZERO = lambda f: lambda x: x
 SUCC = lambda n: lambda f: lambda x: f(n(f)(x))
 PRED = lambda n: lambda f: lambda x: n(lambda g: lambda h: h(g(f)))(lambda u: x)(lambda u: u)
 
-def to_numeral(number):
+def numeral(number):
     if number == 0:
         return ZERO
     else:
-        return SUCC(to_numeral(number - 1))
+        return SUCC(numeral(number - 1))
+
+def numeral_list(py_list: list[int]):
+    lst = LIST
+    for num in py_list:
+        lst = APPEND(numeral(num))(lst)
+    return lst
 
 
 # cons list
@@ -36,8 +42,36 @@ DROP = lambda n: lambda l: n(TAIL)(l)
 TAKE = Y(lambda f: lambda n: lambda l: (OR(IS_EMPTY(l))(IS_ZERO(n))(lambda _: LIST)(lambda _: (INSERT_FRONT(f(PRED(n))(TAIL(l)))(HEAD(l))))(TRUE)))
 CONCAT = lambda l1: lambda l2: REDUCE(APPEND)(l2)(l1)
 RM_IDX = lambda l: lambda n: CONCAT(TAKE(n)(l))(DROP(SUCC(n))(l))
+RANGE_LEN = lambda l: RANGE(ZERO)(LENGTH(l))
+BEGIN = lambda l: INDEX(ZERO)(l)
+END = lambda l: INDEX(ZERO)(REVERSE(l))
+SPLIT1 = lambda l: TAKE(DIV(LENGTH(l))(TWO))(l)
+SPLIT2 = lambda l: DROP(DIV(LENGTH(l))(TWO))(l)
 
-MERGE = Y(lambda f: lambda a: lambda b: IF_THEN_ELIF_THEN_ELIF_THEN_ELSE(IS_EMPTY(a))(b)(IS_EMPTY(b))(a)(LT(HEAD(a))(HEAD(b)))(INSERT_FRONT(f(TAIL(a))(b))(HEAD(a)))(INSERT_FRONT(f(a)(TAIL(b)))(HEAD(b))))
+MERGE = lambda l1: lambda l2: (
+    (
+        lambda helper: helper(helper)(l1)(l2)(LIST)
+    )(
+        lambda self: lambda a: lambda b: lambda result: IF_THEN_ELSE(IS_EMPTY(a))(
+            IF_THEN_ELSE(IS_EMPTY(b))(
+                result
+            )(
+                lambda _: CONS(HEAD(b))(self(self)(a)(TAIL(b))(result))
+            )
+        )(
+            IF_THEN_ELSE(IS_EMPTY(b))(
+                lambda _: CONS(HEAD(a))(self(self)(TAIL(a))(b)(result))
+            )(
+                IF_THEN_ELSE(LT(HEAD(a))(HEAD(b)))(
+                    lambda _: CONS(HEAD(a))(self(self)(TAIL(a))(b)(result))
+                )(
+                    lambda _: CONS(HEAD(b))(self(self)(a)(TAIL(b))(result))
+                )
+            )
+        )
+    )
+)
+
 
 # boolean algebra
 IF_THEN_ELSE = lambda b: lambda x: lambda y: b(x)(y)
@@ -62,7 +96,7 @@ LT = lambda a: lambda b: IS_ZERO(MINUS(SUCC(a))(b))
 MIN = lambda a: lambda b: LTE(a)(b)(a)(b)
 MAX = lambda a: lambda b: GTE(a)(b)(a)(b)
 
-NUMBER = lambda n: to_numeral(n)
+NUMBER = lambda n: numeral(n)
 ONE = NUMBER(1)
 TWO = NUMBER(2)
 TREE = NUMBER(3)

@@ -1,17 +1,17 @@
 from lang import *
-from util import numeral_list, print_numeral_list, print_numeral
+from util import print_numeral_list, print_numeral
 
 
-lst = numeral_list([2, 5, 1, 9, 3, 7, 4, 6, 8])
-test = RANGE(ONE)(TEN)
-
-# lambda calculus merge sort
-len_check = lambda arr: LT(LENGTH(arr))(TWO)
-half1 = lambda arr: TAKE(DIV(LENGTH(arr))(TWO))(arr)
-half2 = lambda arr: DROP(DIV(LENGTH(arr))(TWO))(arr)
+lst = numeral_list([1, 0])
+test = RANGE(ZERO)(TWO)
 
 def merge_sort(arr):
-    return IF_THEN_ELSE(len_check(arr))(arr)(MERGE(merge_sort(half1(arr)))(merge_sort(half2(arr))))
+    if LT(LENGTH(arr))(TWO) is TRUE:
+        return arr
+    left = merge_sort(SPLIT1(arr))
+    right = merge_sort(SPLIT2(arr))
+    merged = MERGE(left)(right)
+    return merged
 
 print("Sum:")
 print_numeral(SUM(lst))
