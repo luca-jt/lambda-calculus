@@ -6,7 +6,7 @@ ZERO = lambda f: lambda x: x
 SUCC = lambda n: lambda f: lambda x: f(n(f)(x))
 PRED = lambda n: lambda f: lambda x: n(lambda g: lambda h: h(g(f)))(lambda u: x)(lambda u: u)
 
-def numeral(number):
+def numeral(number: int):
     if number == 0:
         return ZERO
     else:
@@ -20,9 +20,9 @@ def numeral_list(py_list: list[int]):
 
 
 # cons list
+CONS = lambda h: lambda t: lambda f: f(h)(t)
 CAR = lambda p: p(TRUE)
 CDR = lambda p: p(FALSE)
-CONS = lambda h: lambda t: lambda f: f(h)(t)
 HEAD = lambda l: CAR(CDR(l))
 TAIL = lambda l: CDR(CDR(l))
 LIST = CONS(TRUE)(TRUE)
@@ -99,7 +99,7 @@ MAX = lambda a: lambda b: GTE(a)(b)(a)(b)
 NUMBER = lambda n: numeral(n)
 ONE = NUMBER(1)
 TWO = NUMBER(2)
-TREE = NUMBER(3)
+THREE = NUMBER(3)
 FOUR = NUMBER(4)
 FIVE = NUMBER(5)
 SIX = NUMBER(6)
@@ -114,10 +114,12 @@ DIV = Y(lambda f: lambda a: lambda b: LT(a)(b)(lambda _: ZERO)(lambda _: SUCC(f(
 MOD = Y(lambda f: lambda a: lambda b: LT(a)(b)(lambda _: a)(lambda _: f(MINUS(a)(b))(b))(ZERO))
 IS_EVEN = lambda n: IS_ZERO(MOD(n)(TWO))
 IS_ODD = lambda n: NOT(IS_EVEN(n))
-EXP = lambda m: lambda n: n(m)
-FACTORIAL = FAC = Y(lambda f: lambda n: IS_ZERO(n)(lambda _: ONE)(lambda _: MULT(n)(f(PRED(n))))(ZERO))
+POW = lambda m: lambda n: n(m)
+FACTORIAL = Y(lambda f: lambda n: IS_ZERO(n)(lambda _: ONE)(lambda _: MULT(n)(f(PRED(n))))(ZERO))
 FIB = Y(lambda f: lambda n: LTE(n)(TWO)(lambda _: ONE)(lambda _: PLUS(f(PRED(n)))(f(PRED(PRED(n)))))(ZERO))
 IS_EQUAL = lambda m: lambda n: AND(GTE(m)(n))(LTE(m)(n))
+SQUARE = lambda n: MULT(n)(n)
+CUBE = lambda n: MULT(MULT(n)(n))(n)
 
 
 # type conversions
