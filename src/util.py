@@ -10,7 +10,7 @@ def print_numeral(numeral):
 def numeral_list(py_list: list[int]):
     lst = LIST
     for num in py_list:
-        lst = APPEND(lst)(to_numeral(num))
+        lst = APPEND(to_numeral(num))(lst)
     return lst
 
 def print_numeral_list(c_list):
